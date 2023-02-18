@@ -31,6 +31,18 @@ app.use(function (req, res, next) {
     "Access-Control-Allow-Headers",
     "Origin, X-Requested-With, Content-Type, Accept"
   );
+  res.setHeader("Access-Control-Allow-Credentials", true);
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  // another common pattern
+  // res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET,OPTIONS,PATCH,DELETE,POST,PUT"
+  );
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version"
+  );
   next();
 });
 
@@ -39,11 +51,12 @@ const port = 8000;
 // set up home route
 
 app.get("/", (request, respond) => {
-  respond
-    .status(200)
-    .send(
-      `<div style="width: 100%; display: flex; height: 100%; justify-content: center; align-items: center;">Welcome To Workflow Management Server</div>`
-    );
+  respond.status(200).send(
+    `<div style="width: 100%; display: flex; height: 100%; justify-content: center; align-items: center;"><h1 style="    background: -webkit-linear-gradient(#008524, #9eff9e);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 72px;">Welcome To Workflow Management Server</h1></div>`
+  );
 });
 //ROUTER API V1
 app.use("/user", UserRouter);
