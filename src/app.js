@@ -6,6 +6,8 @@ import logger from "morgan";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import UserRouter from "./routers/user.js";
+import cors from "cors";
+import morgan from "morgan";
 dotenv.config();
 
 /* CONNECT DATABASE - start */
@@ -25,26 +27,8 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(logger("dev"));
-app.use(function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
-  );
-  res.setHeader("Access-Control-Allow-Credentials", true);
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  // another common pattern
-  // res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "GET,OPTIONS,PATCH,DELETE,POST,PUT"
-  );
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version"
-  );
-  next();
-});
+app.use(cors());
+app.use(morgan("common"));
 
 // set up port number
 const port = 8000;
