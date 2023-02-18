@@ -39,13 +39,15 @@ const port = 8000;
 // set up home route
 
 app.get("/", (request, respond) => {
-  respond.status(200).json({
-    message: "Welcome to Project Support",
-  });
+  respond
+    .status(200)
+    .send(
+      `<div style="width: 100%; display: flex; height: 100%; justify-content: center; align-items: center;">Welcome To Workflow Management Server</div>`
+    );
 });
 //ROUTER API V1
 app.use("/user", UserRouter);
 
 app.listen(port, (request, respond) => {
-  console.log(`Our server is live on ${port}. Yay!`);
+  console.log(`Successful server start on ${port}!`);
 });
