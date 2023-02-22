@@ -6,6 +6,7 @@ import logger from "morgan";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import UserRouter from "./routers/user.js";
+import TaskRouter from "./routers/task.js";
 import cors from "cors";
 import morgan from "morgan";
 dotenv.config();
@@ -42,8 +43,11 @@ app.get("/", (request, respond) => {
     font-size: 72px;">Welcome To Workflow Management Server</h1></div>`
   );
 });
-//ROUTER API V1
+//ROUTER API User
 app.use("/user", UserRouter);
+
+//ROUTER API Task
+app.use("/task", TaskRouter);
 
 app.listen(port, (request, respond) => {
   console.log(`Successful server start on ${port}!`);

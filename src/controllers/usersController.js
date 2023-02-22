@@ -4,10 +4,8 @@ import jwt from "jsonwebtoken";
 const usersController = {
   addUsers: async (req, res) => {
     try {
-      console.log("req", req.body);
       const { userName = "", password = "" } = req.body || {};
       const token = jwt.sign({ userName }, process.env.JWT_KEY);
-      console.log("token", token);
       const newUser = new Users({ ...req.body, tokens: [{ token }] });
       await newUser.save((err) => {
         if (err) {
@@ -15,6 +13,22 @@ const usersController = {
         }
       });
       res.status(200).json({ userName, token });
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  },
+  getListUser: async (req, res) => {
+    try {
+      const {} = req.query || {};
+      const users = await Users.find();
+      const listUser = users.map((i) => {
+        return {
+          fullName: i.fullName,
+          userName: i.userName,
+          id: i._id,
+        };
+      });
+      res.status(200).json({ users: listUser });
     } catch (error) {
       res.status(500).json(error);
     }
