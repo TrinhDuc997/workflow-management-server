@@ -5,7 +5,6 @@ const taskController = {
   addTask: async function (req, res, next) {
     try {
       const { listTask = [] } = req.body || {};
-      console.log("🚀 ~ file: taskController.js:8 ~ listTask", listTask);
       let checkErr = false;
       let tasksSaved = [];
       await Task.insertMany(listTask)
@@ -44,23 +43,83 @@ const taskController = {
       return res.status(500).json(error);
     }
   },
+  editTask: async function (req, res, next) {
+    try {
+      const { taskId, taskData } = req.body || {};
+
+      const updatedTask = await Task.findOneAndUpdate(
+        { _id: taskId },
+        { $set: taskData },
+        { new: true }
+      );
+
+      if (!updatedTask) {
+        return res.status(404).json({ message: "Task not found", RetCode: 0 });
+      } else {
+        const { assignedTo = "" } = updatedTask || {};
+        let dataUser = {};
+        if (!!assignedTo) {
+          dataUser = await Users.findById(assignedTo);
+        }
+        return res.status(200).json({
+          message: "success",
+          task: {
+            ...((updatedTask || {})._doc || {}),
+            assignedTo: {
+              id: (dataUser || {})._id,
+              fullName: (dataUser || {}).fullName,
+              userName: (dataUser || {}).userName,
+            },
+          },
+          RetCode: 1,
+        });
+      }
+    } catch (error) {
+      return res.status(500).json(error);
+    }
+  },
+  deleteTask: async function (req, res, next) {
+    try {
+      const { taskId } = req.body || {};
+
+      const deletedTask = await Task.findOneAndDelete({ _id: taskId });
+
+      if (!deletedTask) {
+        return res.status(404).json({ message: "Task not found", RetCode: 0 });
+      } else {
+        return res
+          .status(200)
+          .json({ message: "success", deletedTask, RetCode: 1 });
+      }
+    } catch (error) {
+      return res.status(500).json(error);
+    }
+  },
   getListTask: async (req, res) => {
     try {
       const { createDate } = req.query || {};
-      const date = moment(createDate, "YYYYMMDD").startOf("day");
+      // const date = moment(createDate, "YYYYMMDD").startOf("day");
       let checkErr = false;
-
       const tasksList = await Task.find({
         createDate: createDate,
       })
-        .populate("assignedTo")
+        .populate("assignedTo", "_id userName fullName")
         .exec();
+
+      const modifiedList = tasksList.map((task) => ({
+        ...task.toObject(),
+        assignedTo: {
+          id: task.assignedTo?._id,
+          userName: task.assignedTo?.userName,
+          fullName: task.assignedTo?.fullName,
+        },
+      }));
       if (checkErr) {
         res
           .status(500)
           .json({ message: "what's wrong with insert task", RetCode: 0 });
       } else {
-        res.status(200).json({ tasksList });
+        res.status(200).json({ tasksList: modifiedList });
       }
     } catch (error) {
       res.status(500).json(error);

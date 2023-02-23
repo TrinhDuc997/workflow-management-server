@@ -50,7 +50,7 @@ const commentSchema = new mongoose.Schema(
   { timestamps: true }
 );
 const materialSchema = new mongoose.Schema({
-  name: {
+  materialName: {
     type: String,
     required: true,
   },
@@ -64,7 +64,7 @@ const materialSchema = new mongoose.Schema({
 });
 const TaskSchema = new mongoose.Schema(
   {
-    name: {
+    taskName: {
       type: String,
       required: true,
     },
