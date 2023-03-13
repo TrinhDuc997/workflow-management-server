@@ -125,6 +125,52 @@ const taskController = {
       res.status(500).json(error);
     }
   },
+  getListTaskAccordingMonth: async (req, res) => {
+    try {
+      const { monthSelected } = req.query || {};
+      // const date = moment(createDate, "YYYYMMDD").startOf("day");
+      let checkErr = false;
+      const tasksList = await Task.find({
+        createDate: {
+          $gte: monthSelected + "01",
+          $lte: monthSelected + "31",
+        },
+      })
+        .populate("assignedTo", "_id userName fullName")
+        .exec();
+
+      const modifiedList = tasksList.map((task) => ({
+        ...task.toObject(),
+        assignedTo: {
+          id: task.assignedTo?._id,
+          userName: task.assignedTo?.userName,
+          fullName: task.assignedTo?.fullName,
+        },
+      }));
+
+      const formatListTasksAccrodingDay = {};
+      modifiedList.forEach((i) => {
+        const { createDate } = i || {};
+        if (!formatListTasksAccrodingDay[createDate]) {
+          formatListTasksAccrodingDay[createDate] = [{ ...i }];
+        } else {
+          formatListTasksAccrodingDay[createDate].push(i);
+        }
+      });
+
+      if (checkErr) {
+        res
+          .status(500)
+          .json({ message: "what's wrong with insert task", RetCode: 0 });
+      } else {
+        res
+          .status(200)
+          .json({ tasksListAccrodingDay: formatListTasksAccrodingDay });
+      }
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  },
 };
 
 export default taskController;

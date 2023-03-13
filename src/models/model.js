@@ -31,6 +31,7 @@ const schemaUsers = new mongoose.Schema({
       },
     },
   ],
+  roles: [{ type: Schema.Types.ObjectId, ref: "Role" }],
 });
 
 export const Users = mongoose.model("Users", schemaUsers);
@@ -103,3 +104,24 @@ const TaskSchema = new mongoose.Schema(
 
 // Tạo model cho bảng Task
 export const Task = mongoose.model("Task", TaskSchema);
+
+// Định nghĩa schema cho bảng Roles
+const RoleSchema = new Schema({
+  name: String,
+  permissions: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Permission",
+    },
+  ],
+});
+
+// Tạo model cho bảng Roles
+const Role = mongoose.model("Role", RoleSchema);
+
+const PermissionSchema = new Schema({
+  name: String,
+  description: String,
+});
+
+const Permission = mongoose.model("Permission", PermissionSchema);

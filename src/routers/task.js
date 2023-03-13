@@ -11,4 +11,9 @@ router.post("/deleteTask", taskController.deleteTask);
 
 router.get("/getListTask", taskController.getListTask);
 
+router.get(
+  "/getListTaskAccordingMonth",
+  taskController.getListTaskAccordingMonth
+);
+
 export default router;
