@@ -85,6 +85,9 @@ const TaskSchema = new mongoose.Schema(
     address: {
       type: String,
     },
+    phoneNumber: {
+      type: String,
+    },
     quantity: {
       type: Number,
     },

@@ -9,8 +9,10 @@ import UserRouter from "./routers/user.js";
 import TaskRouter from "./routers/task.js";
 import cors from "cors";
 import morgan from "morgan";
+import { createServer } from "http";
+import { Server } from "socket.io";
+import taskSocketControllers from "./socketControllers/taskSocketController.js";
 dotenv.config();
-
 /* CONNECT DATABASE - start */
 mongoose.set("strictQuery", true);
 mongoose
@@ -25,6 +27,7 @@ mongoose
 
 // set up dependencies
 const app = express();
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(logger("dev"));
@@ -49,6 +52,24 @@ app.use("/user", UserRouter);
 //ROUTER API Task
 app.use("/task", TaskRouter);
 
-app.listen(port, (request, respond) => {
+const server = createServer(app);
+// Setup socket.io --- start
+const io = new Server(server, {
+  cors: {
+    origin: "*", // Update with the URL of your client-side application
+    methods: ["GET", "POST"],
+    allowedHeaders: ["Access-Control-Allow-Origin"],
+    credentials: true,
+  },
+});
+io.on("connection", (socket) => {
+  console.log("New client connected!");
+  taskSocketControllers(io, socket);
+});
+// Setup socket.io --- end
+
+// listen server --- start
+server.listen(port, (request, respond) => {
   console.log(`Successful server start on ${port}!`);
 });
+// listen server --- end

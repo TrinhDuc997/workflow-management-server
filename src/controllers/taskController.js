@@ -61,12 +61,13 @@ const taskController = {
         if (!!assignedTo) {
           dataUser = await Users.findById(assignedTo);
         }
+
         return res.status(200).json({
           message: "success",
           task: {
             ...((updatedTask || {})._doc || {}),
             assignedTo: {
-              id: (dataUser || {})._id,
+              _id: (dataUser || {})._id,
               fullName: (dataUser || {}).fullName,
               userName: (dataUser || {}).userName,
             },
@@ -109,7 +110,7 @@ const taskController = {
       const modifiedList = tasksList.map((task) => ({
         ...task.toObject(),
         assignedTo: {
-          id: task.assignedTo?._id,
+          _id: task.assignedTo?._id,
           userName: task.assignedTo?.userName,
           fullName: task.assignedTo?.fullName,
         },
