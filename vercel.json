@@ -11,21 +11,19 @@
       }
     }
   ],
-  "rewrites": [
+  "routes": [
     {
-      "source": "/(.*)",
-      "destination": "src/app.js"
-    }
-  ],
-  "headers": [
+      "src": "/socket.io/(.*)",
+      "dest": "http://localhost:3000/socket.io/$1",
+      "headers": {
+        "Connection": "Upgrade",
+        "Upgrade": "websocket"
+      },
+      "websocket": true
+    },
     {
-      "source": "/(.*)",
-      "headers": [
-        {
-          "key": "Access-Control-Allow-Origin",
-          "value": "*"
-        }
-      ]
+      "src": ".*",
+      "dest": "src/app.js"
     }
   ]
 }
