@@ -31,7 +31,11 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(logger("dev"));
-app.use(cors());
+app.use(
+  cors({
+    origin: "*",
+  })
+);
 app.use(morgan("common"));
 
 // set up port number
@@ -57,9 +61,6 @@ const server = createServer(app);
 const io = new Server(server, {
   cors: {
     origin: "*", // Update with the URL of your client-side application
-    methods: ["GET", "POST"],
-    allowedHeaders: ["Access-Control-Allow-Origin"],
-    credentials: true,
   },
 });
 io.on("connection", (socket) => {
