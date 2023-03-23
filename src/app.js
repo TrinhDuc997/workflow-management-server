@@ -58,9 +58,13 @@ const io = new Server(server, {
   cors: {
     origin: "*",
   },
+  transports: ["websocket"],
 });
 io.on("connection", (socket) => {
   console.log("New client connected!");
+  socket.on("disconnect", () => {
+    console.log("user disconnected");
+  });
   taskSocketControllers(io, socket);
 });
 // Setup socket.io --- end
