@@ -68,10 +68,6 @@ io.on("connection", (socket) => {
 });
 // Setup socket.io --- end
 
-server.prependListener("request", (req, res) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-});
-
 // listen server --- start
 server.listen(port, (request, respond) => {
   console.log(`Successful server start on ${port}!`);
