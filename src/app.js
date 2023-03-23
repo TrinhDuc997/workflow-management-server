@@ -58,7 +58,6 @@ const io = new Server(server, {
   cors: {
     origin: "*",
   },
-  path: "/socket/",
 });
 io.on("connection", (socket) => {
   console.log("New client connected!");
