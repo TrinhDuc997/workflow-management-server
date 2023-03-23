@@ -26,15 +26,6 @@
           "value": "*"
         }
       ]
-    },
-    {
-      "source": "/workflow-management-server.vercel.app/(.*)",
-      "headers": [
-        {
-          "key": "Access-Control-Allow-Origin",
-          "value": "*"
-        }
-      ]
     }
   ]
 }
